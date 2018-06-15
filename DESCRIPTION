@@ -2,8 +2,8 @@ Package: drugCombo
 Type: Package
 Title: Drug Interaction Modeling Based on Loewe Additivity Following
         Harbron's Approach
-Version: 1.0.0
-Date: 2018-05-09
+Version: 1.0.2
+Date: 2018-06-15
 Author: Maxim Nazarov, Nele Goeyvaerts, Chris Harbron (original article and code)
 Maintainer: Maxim Nazarov <maxim.nazarov@openanalytics.eu>
 Description: Perform assessment of synergy/antagonism for drug combinations based
@@ -25,6 +25,6 @@ VignetteBuilder: knitr, rmarkdown
 LazyData: true
 Encoding: UTF-8
 NeedsCompilation: no
-Packaged: 2018-05-09 13:53:27 UTC; mnazarov
+Packaged: 2018-06-15 13:20:00 UTC; mnazarov
 Repository: CRAN
-Date/Publication: 2018-05-11 09:22:03 UTC
+Date/Publication: 2018-06-15 13:43:39 UTC

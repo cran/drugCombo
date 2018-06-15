@@ -277,19 +277,19 @@ Some examples are shown below to illustrate the use of the `fitModel` function.
 <!-- ``` -->
 
 For a checkerboard design, illustrating the pre-defined model, symbolic and literal formula for the same model with a linear dependency on log10 dose of the first compound:
-```{r fitLin}
+```{r fitLin, eval = 1}
 fitLin1 <- fitModel(data = gridData, mono = monoGrid, model = "linear1")
 fitLin1b <- fitModel(gridData, monoGrid, tauFormula = ~ log10(d1))
 fitLin1c <- fitModel(gridData, monoGrid, tauFormula = ~ tau1+tau2*log10(d1))
 ```
 
 For a checkerboard design, illustrating 2-stage estimation:
-```{r fit1vs2}
+```{r fit1vs2, eval = FALSE}
 fitLin1St2 <- fitModel(gridData, monoGrid, model = "linear1", stage = 2)
 ```
 
 Apart from continuous models, such as the linear model, also discrete models can be fitted such as:
-```{r fitSep}
+```{r fitSep, eval = 1}
 fitSep1 <- fitModel(gridData, monoGrid, model = "separate1", tauLog = TRUE)
 fitSep2 <- fitModel(gridData, monoGrid, model = "separate2", tauLog = TRUE, fixed = c(b = 1, h2 = 3.494))
 ```
@@ -380,7 +380,7 @@ measurements.
 
 ```{r tau1, warning = TRUE}
 tauSurface1 <- getTauSurface(fitExp1, method = "default") 
-tauSurface1b <- getTauSurface(fitExp1, method = "boot", niter = 50)
+tauSurface1b <- getTauSurface(fitExp1, method = "boot", niter = 5)
 
 tauSurface2 <- getTauSurface(fitExp1St2, method = "default") 
 tauZhao <- getTauSurface(fitZhao)
@@ -389,7 +389,7 @@ tauZhao <- getTauSurface(fitZhao)
 For the 2-stage approach, the Wald-type confidence intervals do not take into account the uncertainty of the monotherapy estimation in the first stage, and therefore it is recommended to use the bootstrap-based confidence intervals instead.
 
 ```{r tau1b}
-tauSurface2b <- getTauSurface(fitExp1St2, method = "boot", niter = 50)
+tauSurface2b <- getTauSurface(fitExp1St2, method = "boot", niter = 5)
 ```
 
 The `getTauSurface` function returns a `tauSurface` object, which has `plot`, `contour`, `print` and `unique` methods defined. 

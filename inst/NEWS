@@ -1,2 +1,7 @@
-0.1.0
-  o initial commit
+1.0.2 (2018-06-15)
+  o reduce run time for tests and vignette compilation
+1.0.1 (2018-06-14)
+  o fixes for tau plot comparison, including compatibility with the upcoming version of ggplot2
+1.0.0 (2018-05-09)
+  o initial public release
+  

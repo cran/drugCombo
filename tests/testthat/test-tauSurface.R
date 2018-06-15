@@ -16,6 +16,8 @@ fitExp1 <- fitModel(data1, mono, tauFormula = ~ exp(tau1 + tau2*log(d1) + tau3*l
 fitLiteral1 <- fitModel(data1, mono, tauFormula = ~tau1+tau2*log10(d1), stage = 1)
 fitLiteral2 <- fitModel(data1, mono, tauFormula = ~tau1+tau2*log10(d1), stage = 2)
 
+tauSep1 <- getTauSurface(fitSep1)
+
 test_that("tau surface calculation gives the same result for symbolic/literal specification, wald", {
       
       # wald
@@ -30,39 +32,30 @@ test_that("tau surface calculation gives the same result for symbolic/literal sp
       
     })
 
-test_that("tau surface calculation gives the same result for symbolic/literal specification, bootstrap", {
+test_that("bootstrap: symbolic/literal specification, resampling", {
       
-      # boot
-      tauSym1 <- getTauSurface(fitSymbolic1, method = "boot", niter = 2)
-      tauLit1 <- getTauSurface(fitLiteral1, method = "boot", niter = 2)
+      skip_on_cran()
       
-      tauSym2 <- getTauSurface(fitSymbolic2, method = "boot", niter = 2)
-      tauLit2 <- getTauSurface(fitLiteral2, method = "boot", niter = 2)
-      
-      expect_equal(tauLit1$data$tau, tauSym1$data$tau, tolerance = 1e-4)
-      expect_equal(tauLit2$data$tau, tauSym2$data$tau, tolerance = 1e-4)
-      
-      expect_equal(dim(tauSym1$bootstrapCoefs), c(2, 2))
-      expect_equal(dim(tauLit2$bootstrapCoefs), c(2, 2))
-      
-    })
+      seed <- sample(1:1000, 1)
 
-test_that("different resampling methods work for bootstrap", {
-      
-      # bootR1
-      tauSymR1 <- getTauSurface(fitSymbolic1, method = "boot", niter = 2, resample = "all")
+      tauSymR1 <- getTauSurface(fitSymbolic1, method = "boot", niter = 2, seed = seed, resample = "all")
       tauSymR2 <- getTauSurface(fitSymbolic1, method = "boot", niter = 2, resample = "mono")
       tauSymR3 <- getTauSurface(fitSymbolic1, method = "boot", niter = 2, resample = "stratified")
+
+      tauLit1 <- getTauSurface(fitLiteral1, method = "boot", niter = 2, seed = seed)
       
       expect_equal(tauSymR1$data$tau, tauSymR2$data$tau, tolerance = 1e-4)
       expect_equal(tauSymR1$data$tau, tauSymR3$data$tau, tolerance = 1e-4)
       
+      
+      expect_equal(dim(tauSymR1$bootstrapCoefs), c(2, 2))
+      expect_equal(tauSymR1$bootstrapCoefs, bootstrapCoefs(tauLit1), tolerance = 1e-4)
+      expect_equivalent(tauSymR1$data, tauLit1$data, tolerance = 1e-4)
+      
     })
-
 
 test_that("tau surface calculation gives the same result with/without tauLog", {
       
-      fitSep1 <- fitModel(data1, mono, model = "separate1", tauLog = FALSE)
       fitSepLog1 <- fitModel(data1, mono, model = "separate1", tauLog = TRUE)
       
       coef1 <- coef(fitSep1)[grepl("tau", names(coef(fitSep1)))]
@@ -70,7 +63,6 @@ test_that("tau surface calculation gives the same result with/without tauLog", {
       
       expect_equivalent(coef1, exp(coefLog1), tolerance = 1e-4)
       
-      tauSep1 <- getTauSurface(fitSep1)
       tauSepLog1 <- getTauSurface(fitSepLog1)
       
       expect_equal(tauSep1, tauSepLog1, tolerance = 1e-4)
@@ -85,35 +77,20 @@ test_that("tau surface calculation works if tau is fixed", {
       fitLitFix <- fitModel(data2, tauFormula = ~tau1+tau2*log10(d1), stage = 1, fixed = c(tau1 = 0.6))
       
       expect_silent(getTauSurface(fitLitFix))
-      getTauSurface(fitLitFix, method = "boot", niter = 2)
       
       # symbolic
-      fitSepFix <- fitModel(data2, model = "separate1", tauLog = FALSE, fixed = c(tau1 = 1), lower = rep(0, 15))
       fitSepFixLog <- fitModel(data1, mono, model = "separate1", tauLog = TRUE, fixed = c(logtau1 = 0))
       
-      expect_silent(getTauSurface(fitSepFix))
       expect_silent(getTauSurface(fitSepFixLog))
-      getTauSurface(fitSepFixLog, method = "boot", niter = 2)
-      
-    })
-
-test_that("setting seed works for bootstrap", {
-      
-      seed <- sample(1:1000, 1)
-      
-      tauSym1 <- getTauSurface(fitSymbolic1, method = "boot", niter = 2, seed = seed)
-      tauLit1 <- getTauSurface(fitLiteral1, method = "boot", niter = 2, seed = seed)
-      
-      expect_equal(tauSym1$bootstrapCoefs, bootstrapCoefs(tauLit1), tolerance = 1e-4)
-      
-      expect_equivalent(tauSym1$data, tauLit1$data, tolerance = 1e-4)
       
     })
 
 
 test_that("bootstrap coefficients are returned", {
-      tauSep1 <- getTauSurface(fitSep1)
-      niter <- 5
+      
+      skip_on_cran()
+      
+      niter <- 4
       
       tauSep1b <- getTauSurface(fitSep1, method = "boot", niter = niter)	
       
@@ -136,7 +113,6 @@ test_that("plots work for tauSurface", {
       
       tauSym3 <- getTauSurface(fitSymbolic3)
       
-      tauSep1 <- getTauSurface(fitSep1)
       tauExp1 <- getTauSurface(fitExp1)
       
       plot(tauSep1, continuous = TRUE)

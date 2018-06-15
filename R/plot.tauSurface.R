@@ -89,10 +89,16 @@ plot.tauSurface <- function(x, y = NULL, which = c("2d", "3d"), ...) {
     
     if (compare) {
       
-      # check if can 'simplify'
+      # check if can 'simplify' the plots
       plotData  <- unique(x)
       plotData2 <- unique(y)
-      if (!setequal(names(plotData), names(plotData2))) {
+      defaultCols <- c("se.est", "lower", "upper")
+      sameSide <- setequal(
+          setdiff(names(plotData), defaultCols), 
+          setdiff(names(plotData2), defaultCols)
+      )
+      
+      if (!sameSide) {
         # restore all data
         plotData <- x$data
         plotData2 <- y$data
@@ -278,8 +284,12 @@ tauPlot2d <- function(tauSurface, tauSurface2 = NULL, side = "d1",
     colorVar <- colorBy
   }
   
+  # make sure both 1 or 2 group variables are supported
+  groupVarStr <- if (!is.null(groupVar))
+    paste0("interaction(`", paste0(groupVar, collapse = "`, `"), "`)") else NULL
+  
   p <- ggplot(data = tauSurface, aes_string(x = side, y = "tau",
-          group = groupVar, col = colorVar, fill = colorVar))
+          group = groupVarStr, col = colorVar, fill = colorVar))
   
   # adding smooth CIs
   getFineGrid <- function(tauSurface, side, groupVar, funs, n = 51) {

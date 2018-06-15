@@ -76,8 +76,6 @@ test_that("constraints work for tau, symbolic formula", {
       
       tauS2 <- getTauSurface(fitS2)
       plot(tauS2)
-      tauS2b <- getTauSurface(fitS2, method = "boot", niter = 2)
-      plot(tauS2b)
       
     })
 
@@ -107,27 +105,17 @@ test_that("constraints work for tau, literal formula", {
       expect_equal(fitL$tauModel, "zhao")
       expect_equal(fitL$originalTauFormula, defaultModels()[["zhao"]])
       expect_false(identical(fitL$tauFormula, defaultModels()[["zhao"]]))
-      
-      tauL <- getTauSurface(fitL)
-      plot(tauL)
-      tauLb <- getTauSurface(fitL, method = "boot", niter = 2)
-      plot(tauLb)
-      
+            
       # model not pre-defined
       fitL2 <-  fitModel(data1, defaultMono, tauFormula = ~tau1+tau2*log10(d1), fixed = tauConstraints2)
       expect_s3_class(fitL2, "HarbronFit")
       expect_false("tau1" %in% names(coef(fitL2)))
       expect_true("fixedTau" %in% names(fitL2))
       expect_equal(fitL2$nTaus, 2)
-      
-      tauL2 <- getTauSurface(fitL2)
-      plot(tauL2)
-      tauL2b <- getTauSurface(fitL2, method = "boot", niter = 2)
-      plot(tauL2b)
-      
+            
     })
 
-test_that("formula is not modified if constraints are not used, and modified is they are", {
+test_that("formula is not modified if constraints are not used, and modified if they are", {
       
       fit1 <- fitModel(data1, defaultMono, model = "linear1")
       formula1 <- ~tau1+tau2*log10(d1)
@@ -151,10 +139,16 @@ test_that("fitted objects are the same for different tau specs", {
       expect_equal(coef(fitSymbolic1), coef(fitLiteral1), tolerance = 1e-4)
       expect_equal(coef(fitSymbolic2), coef(fitLiteral2), tolerance = 1e-4)
       
+      plot(fitSymbolic1)
+      plot(fitLiteral1, "2d")
+      plot(fitLiteral2, "3d")
+      plot(fitSymbolic2, fitLiteral1, side = "d2", modelNames = c("sym", "lit"))
       
     })
 
 test_that("inactiveIn argument works as expected", {
+      
+      skip_on_cran()
       
       fitU0 <- fitModel(data1, model = "uniform", inactiveIn = 0)
       fitU1 <- fitModel(data1, model = "uniform", inactiveIn = 1)

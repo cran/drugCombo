@@ -18,15 +18,15 @@ plot(monoGrid)
 summary(monoRay)
 plot(monoRay)
 
-## ----fitLin--------------------------------------------------------------
+## ----fitLin, eval = 1----------------------------------------------------
 fitLin1 <- fitModel(data = gridData, mono = monoGrid, model = "linear1")
 fitLin1b <- fitModel(gridData, monoGrid, tauFormula = ~ log10(d1))
 fitLin1c <- fitModel(gridData, monoGrid, tauFormula = ~ tau1+tau2*log10(d1))
 
-## ----fit1vs2-------------------------------------------------------------
-fitLin1St2 <- fitModel(gridData, monoGrid, model = "linear1", stage = 2)
+## ----fit1vs2, eval = FALSE-----------------------------------------------
+#  fitLin1St2 <- fitModel(gridData, monoGrid, model = "linear1", stage = 2)
 
-## ----fitSep--------------------------------------------------------------
+## ----fitSep, eval = 1----------------------------------------------------
 fitSep1 <- fitModel(gridData, monoGrid, model = "separate1", tauLog = TRUE)
 fitSep2 <- fitModel(gridData, monoGrid, model = "separate2", tauLog = TRUE, fixed = c(b = 1, h2 = 3.494))
 
@@ -60,13 +60,13 @@ plot(fitExp1, fitExp1St2, modelNames = c("1-stage", "2-stage"))
 
 ## ----tau1, warning = TRUE------------------------------------------------
 tauSurface1 <- getTauSurface(fitExp1, method = "default") 
-tauSurface1b <- getTauSurface(fitExp1, method = "boot", niter = 50)
+tauSurface1b <- getTauSurface(fitExp1, method = "boot", niter = 5)
 
 tauSurface2 <- getTauSurface(fitExp1St2, method = "default") 
 tauZhao <- getTauSurface(fitZhao)
 
 ## ----tau1b---------------------------------------------------------------
-tauSurface2b <- getTauSurface(fitExp1St2, method = "boot", niter = 50)
+tauSurface2b <- getTauSurface(fitExp1St2, method = "boot", niter = 5)
 
 ## ----taupl1--------------------------------------------------------------
 plot(tauSurface1)
