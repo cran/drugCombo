@@ -90,8 +90,11 @@ tauModelFormula <- function(d1, d2, h1 = NA, h2 = NA, e1 = NA, e2 = NA,
     G[abs(G) < eps] <- 0
 
     # find approximate response(y) by "binary search" 
-    L[G == 0] <- U[G == 0] <- response[G == 0]   # found response value    
-    if(b > m1 || b2 > m2) {  # slope is negative
+    L[G == 0] <- U[G == 0] <- response[G == 0]   # found response value
+    
+    if ((inactiveIn == 0 && (b > m1 || b2 > m2)) || 
+        (inactiveIn == 1 && b2 > m2) || 
+        (inactiveIn == 2 && b > m1)) { # slope is negative  
       # increase response on next iteration by increasing L [as response = (L+U)/2]
       L[G < 0] <- response[G < 0]   
       # decrease response on next iteration by decreasing U
