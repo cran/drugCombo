@@ -4,8 +4,9 @@
 \alias{tauPlot3d}
 \title{Plot 3d surface of interaction index estimates}
 \usage{
-tauPlot3d(tauSurface, logScale = TRUE, continuous = FALSE, funs = NULL,
-  addPlane = continuous, colorPoints = TRUE, widget = FALSE)
+tauPlot3d(tauSurface, logScale = TRUE, continuous = FALSE,
+  funs = NULL, addPlane = continuous, colorPoints = TRUE,
+  widget = FALSE)
 }
 \arguments{
 \item{tauSurface}{A \code{tauSurface} object returned by 

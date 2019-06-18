@@ -6,14 +6,14 @@
 #' (default), taken from the \code{fit} object. 
 #' @param addCI Whether confidence intervals need to be computed.
 #' @param method Which method to use to calculate confidence intervals: 
-#' "default" for Wald-type or "boot" for nonparametric bootstrap.
+#' "default" for Wald-type or "boot" for non-parametric bootstrap.
 #' @param level The confidence level required for the confidence intervals 
 #' (default is 0.95).
 #' @inheritParams getBootTaus
 #' @param ... Further parameters that are passed to \code{\link{getBootTaus}}.
 #' @return An object of class "tauSurface" which is essentially a list with 
 #' the following components: data frame with interaction index (tau) estimates,
-#' standard errors and pointwise confidence intervals, formulas for computing 
+#' standard errors and point-wise confidence intervals, formulas for computing 
 #' tau at any given dose (only for models with continuous functions used to 
 #' define tau), and details on the tau specification from the \code{fit}. In 
 #' addition, if the "boot" method was used, all the bootstrap estimates are 
@@ -58,16 +58,18 @@ getTauSurface <- function(fit, data = NULL, addCI = TRUE,
     niter <- NULL
   
   if (fit$tauSpec == "symbolic") {
+
+    # detect if the formula is continuous: currently assume continuous if 
+    # we have only d1 and/or d2 in the formula and they are not factors
+    # FIXME: is there a better way to do this?
+    factorsInFormula <- grepl("factor", deparse(attr(terms(fit$tauFormula), "variables"), 
+            width.cutoff = 500))
+    continuous <- isTRUE(setequal(formulaCols, c("d1", "d2")) && !factorsInFormula)
     
-    tres <- tauDeltaMethod(fit = fit, data = data, level = level)
+    tres <- tauDeltaMethod(fit = fit, data = data, level = level, continuous = continuous)
     tau <- tres[["tau"]] 
         
     # add formula for continuous plotting
-    # currently do this if we have only d1 and/or d2 in the formula and they are not factors
-    # FIXME: is there a better way to do this?
-    factorsInFormula <- grepl("factor", deparse(attr(terms(fit$tauFormula), "variables")))
-    continuous <- isTRUE(setequal(formulaCols, c("d1", "d2")) && !factorsInFormula)
-    
     if (continuous)
       surfaceFormula <- function(d1, d2) {
 
@@ -139,13 +141,16 @@ getTauSurface <- function(fit, data = NULL, addCI = TRUE,
           ciFormula <- function(side = c("lower", "upper"), level = 0.95) {
             side <- match.arg(side)
             function(d1, d2) 
-              tauDeltaMethod(fit, data = Filter(Negate(is.null), list(d1 = d1, d2 = d2)), level = level)[[side]]
+              tauDeltaMethod(fit, data = Filter(Negate(is.null), list(d1 = d1, d2 = d2)), 
+                  level = level)[[side]]
           } 
         
       }
     }
   
   } else if (fit$tauSpec == "literal") {
+
+    continuous <- TRUE
     
     tres <- tauDeltaMethod(fit = fit, data = data, level = level)
     tau <- tres[["tau"]]
@@ -215,6 +220,9 @@ getTauSurface <- function(fit, data = NULL, addCI = TRUE,
   
   if (fit$stage == 2 && addCI && method != "boot") {
     warning("Confidence intervals computed don't take into account error propagation from the 1st stage (mono). Please use method = 'boot' for this.")
+  }
+  if (addCI && isTRUE(fit$tauLog) && isTRUE(continuous) && method != "boot") {
+    warning("Confidence intervals may not be appropriate for the chosen tau model, as tauLog = TRUE was used. Consider using method = 'boot' or tauLog = FALSE.")
   }
   
   res <- cbind(data, tau = c(tau))
@@ -294,6 +302,15 @@ print.tauSurface <- function(x,  ...) {
   invisible(toPrint)
 }
 
+#' @importFrom utils head
+head.tauSurface <- function(x, ...) {
+  head(x$data, ...)
+}
+
+#' @importFrom utils tail
+tail.tauSurface <- function(x, ...) {
+  tail(x$data, ...)
+}
 
 # Calculate interaction index estimates and Wald-type confidence intervals 
 # 
@@ -307,17 +324,18 @@ print.tauSurface <- function(x,  ...) {
 # @return data frame
 # @keywords internal
 # @author Maxim Nazarov
-tauDeltaMethod <- function(fit, data, level = 0.95) { 
+tauDeltaMethod <- function(fit, data, level = 0.95, continuous = TRUE) { 
   
   # whether fitting was done on log-transformed taus
   tauLog <- isTRUE(fit$tauLog) 
-
+	continuous <- isTRUE(continuous)
+	
   tauNames <- grep("tau", names(coef(fit)), value = TRUE)
   
   tauEstimates <- as.list(coef(fit)[tauNames])
   # add fixed tau values
   tauEstimates <- c(tauEstimates, fit$fixedTau)
-  if (tauLog) 
+  if (tauLog && continuous)
     tauEstimates <- lapply(tauEstimates, exp)
   
   tauVar <- vcov(fit)[tauNames, tauNames, drop = FALSE]
@@ -368,7 +386,7 @@ tauDeltaMethod <- function(fit, data, level = 0.95) {
     tau <- if (length(tauEstimates)) gd %*% unlist(tauEstimates) else 1
     
     # FIXME: understand this fully
-    if (tauLog)
+    if (tauLog && continuous)
       tauVar <- tauVar * unlist(tauEstimates) %*% t(unlist(tauEstimates))
     
   } else 
@@ -376,8 +394,14 @@ tauDeltaMethod <- function(fit, data, level = 0.95) {
 
   se.est <- sqrt(diag(gd %*% tauVar %*% t(gd)))
   
-  lower <- tau - qnorm((1 + level)/2) * se.est
-  upper <- tau + qnorm((1 + level)/2) * se.est
+  if (tauLog && !continuous) { # new addition: only for 'discrete' models
+    lower <- exp(tau - qnorm((1 + level)/2) * se.est)
+    upper <- exp(tau + qnorm((1 + level)/2) * se.est)
+    tau <- exp(tau)
+  } else {
+    lower <- tau - qnorm((1 + level)/2) * se.est
+    upper <- tau + qnorm((1 + level)/2) * se.est
+  }
   
   data.frame(tau, se.est, lower, upper, row.names = NULL)
   

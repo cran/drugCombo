@@ -5,8 +5,8 @@
 \title{Fit drug interaction index model according to Harbron's framework}
 \usage{
 fitModel(data, mono = NULL, model = NULL, tauFormula = NULL,
-  tauLog = FALSE, tauStart = 1 * (!tauLog), stage = 1, fixed = NULL,
-  inactiveIn = 0, verbose = FALSE, ...)
+  tauLog = FALSE, tauStart = 1 * (!tauLog), stage = 1,
+  fixed = NULL, inactiveIn = 0, verbose = FALSE, ...)
 }
 \arguments{
 \item{data}{A (long) data frame to fit the model to. Required columns are 

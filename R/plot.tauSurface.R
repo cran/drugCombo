@@ -309,11 +309,11 @@ tauPlot2d <- function(tauSurface, tauSurface2 = NULL, side = "d1",
     fineGrid
   }
   
-  fineGrid <- if (continuous && !is.null(funs)) {
+  fineGrid <- if (continuous && !is.null(funs) && !is.na(side)) {
         getFineGrid(tauSurface1, side, groupVar, funs)
       } else tauSurface1
   
-  fineGrid2 <- if (continuous2 && !is.null(funs2)) {
+  fineGrid2 <- if (continuous2 && !is.null(funs2) && !is.na(side)) {
         getFineGrid(tauSurface2, side, groupVar, funs2)
       } else tauSurface2
   

@@ -54,8 +54,23 @@ test_that("bootstrap: symbolic/literal specification, resampling", {
       
     })
 
-test_that("tau surface calculation gives the same result with/without tauLog", {
+test_that("tau surface calculation gives the same result with/without tauLog for continuous model", {
+      fitContinuous <- fitModel(data1, mono, tauFormula = ~1+d1, tauLog = FALSE, lower = rep(0, 6))
+      fitContinuousLog <- fitModel(data1, mono, tauFormula = ~1+d1, tauLog = TRUE, lower = c(rep(0, 4), rep(-Inf, 2)))
       
+      coef1 <- coef(fitContinuous)[grepl("tau", names(coef(fitContinuous)))]
+      coefLog1 <- coef(fitContinuousLog)[grepl("tau", names(coef(fitContinuousLog)))]
+      
+      expect_equivalent(coef1, exp(coefLog1), tolerance = 1e-4)
+      
+      tauCont <- getTauSurface(fitContinuous)
+      expect_warning(tauContLog <- getTauSurface(fitContinuousLog), "may not be appropriate")
+      
+      expect_equal(tauCont, tauContLog, tolerance = 1e-4)
+    })
+
+test_that("tau surface calculation doesn't give the same result with/without tauLog for discrete model", {
+            
       fitSepLog1 <- fitModel(data1, mono, model = "separate1", tauLog = TRUE)
       
       coef1 <- coef(fitSep1)[grepl("tau", names(coef(fitSep1)))]
@@ -65,7 +80,8 @@ test_that("tau surface calculation gives the same result with/without tauLog", {
       
       tauSepLog1 <- getTauSurface(fitSepLog1)
       
-      expect_equal(tauSep1, tauSepLog1, tolerance = 1e-4)
+      # not equal
+      expect_false(isTRUE(all.equal(tauSep1, tauSepLog1, tolerance = 1e-4)))
       
     })
 

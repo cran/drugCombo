@@ -18,7 +18,7 @@ getTauSurface(fit, data = NULL, addCI = TRUE, method = c("default",
 \item{addCI}{Whether confidence intervals need to be computed.}
 
 \item{method}{Which method to use to calculate confidence intervals: 
-"default" for Wald-type or "boot" for nonparametric bootstrap.}
+"default" for Wald-type or "boot" for non-parametric bootstrap.}
 
 \item{level}{The confidence level required for the confidence intervals 
 (default is 0.95).}
@@ -38,7 +38,7 @@ replicates in the data.}
 \value{
 An object of class "tauSurface" which is essentially a list with 
 the following components: data frame with interaction index (tau) estimates,
-standard errors and pointwise confidence intervals, formulas for computing 
+standard errors and point-wise confidence intervals, formulas for computing 
 tau at any given dose (only for models with continuous functions used to 
 define tau), and details on the tau specification from the \code{fit}. In 
 addition, if the "boot" method was used, all the bootstrap estimates are 
