@@ -1,3 +1,7 @@
+1.1.1 (2019-10-15)
+  o show total number of iterations in the verbose output for bootstrap
+  o added 'facetOpts' argument to the 2d tau plot
+  o added extra check for too large taus to avoid issues during model fitting  
 1.1.0 (2019-06-18)
   o change the way "default" confidence intervals are calculated in case tauLog = TRUE and "discrete" tau model is used
 1.0.3 (2018-11-09)

@@ -32,7 +32,9 @@ tauModelFormula <- function(d1, d2, h1 = NA, h2 = NA, e1 = NA, e2 = NA,
   
   # back-transform (exp)
   if (!is.null(tau) && tauLog) 
-    tau <- lapply(tau, exp)
+    tau <- lapply(tau, function(x) {
+          exp(min(log(.Machine$double.xmax), x))
+        })
   
   mono <- (d1 == 0) | (d2 == 0)
   

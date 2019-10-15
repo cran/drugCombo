@@ -99,14 +99,14 @@ getBootTaus <- function(fit, niter = 100,
     }
     
     if (verbose)
-      cat("iteration: ", b, ", converged: ", 
+      cat("iteration: ", b, " / ", niter, ", converged: ", 
           b-sum(vapply(taus[seq_len(b)], is.null, logical(1))), " / ", b, 
           "\r", sep = "")
     
   }
   
   if (length(taus) == 0 && length(errors) > 0)
-    stop("None of the bootstrap iterations succeded. The errors are:\n - ", 
+    stop("None of the bootstrap iterations succeeded. The errors are:\n - ", 
         paste(errors[!sapply(errors, is.null)], collapse = "\n - "))
   
   notConverged <- vapply(taus, is.null, logical(1))

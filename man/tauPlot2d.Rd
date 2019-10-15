@@ -8,7 +8,7 @@ tauPlot2d(tauSurface, tauSurface2 = NULL, side = "d1",
   groupBy = NULL, colorBy = groupBy, facetBy = "auto",
   continuous = FALSE, continuous2 = FALSE, addLine = continuous ||
   continuous2, funs = NULL, funs2 = NULL, title = NULL,
-  tauNames = NULL, digits = 4)
+  tauNames = NULL, digits = 4, facetOpts = NULL)
 }
 \arguments{
 \item{tauSurface}{A \code{tauSurface} object returned by 
@@ -57,6 +57,8 @@ comparison of estimates (i.e. when \code{tauSurface2} is provided).}
 
 \item{digits}{Number of digits used in \code{\link[base]{format}} for the 
 dose labels.}
+
+\item{facetOpts}{Arguments passed to \code{\link[ggplot2]{facet_wrap}}}
 }
 \value{
 A ggplot2 object.

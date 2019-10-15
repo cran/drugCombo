@@ -190,6 +190,7 @@ plot.tauSurface <- function(x, y = NULL, which = c("2d", "3d"), ...) {
 #' comparison of estimates (i.e. when \code{tauSurface2} is provided).  
 #' @param digits Number of digits used in \code{\link[base]{format}} for the 
 #' dose labels.
+#' @param facetOpts Arguments passed to \code{\link[ggplot2]{facet_wrap}}
 #' @return A ggplot2 object.
 #' @author Maxim Nazarov
 #' @seealso \code{\link{plot.tauSurface}}, \code{\link{tauPlot3d}}
@@ -197,7 +198,8 @@ plot.tauSurface <- function(x, y = NULL, which = c("2d", "3d"), ...) {
 tauPlot2d <- function(tauSurface, tauSurface2 = NULL, side = "d1", 
     groupBy = NULL, colorBy = groupBy, facetBy = "auto",
     continuous = FALSE, continuous2 = FALSE, addLine = continuous || continuous2, 
-    funs = NULL, funs2 = NULL, title = NULL, tauNames = NULL, digits = 4) {
+    funs = NULL, funs2 = NULL, title = NULL, tauNames = NULL, digits = 4,
+    facetOpts = NULL) {
 
   tauCompareColumn <- "tau.est"
   compare <- FALSE
@@ -428,7 +430,7 @@ tauPlot2d <- function(tauSurface, tauSurface2 = NULL, side = "d1",
           "' found for the 'facetBy' argument.")
     }
     if (length(facetBy) > 0)
-      p <- p + facet_wrap(facetBy)
+      p <- p + do.call(facet_wrap, list(facets = facetBy, facetOpts))
   }
     
   if (!is.null(title))
