@@ -4,8 +4,13 @@
 \alias{fitPlot3d}
 \title{Plot 3d surface of observations and model fit}
 \usage{
-fitPlot3d(fit, logScale = TRUE, useFineGrid = TRUE, showMesh = TRUE,
-  widget = FALSE)
+fitPlot3d(
+  fit,
+  logScale = TRUE,
+  useFineGrid = TRUE,
+  showMesh = TRUE,
+  widget = FALSE
+)
 }
 \arguments{
 \item{fit}{A \code{HarbronFit} object returned by 

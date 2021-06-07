@@ -4,8 +4,7 @@
 \alias{plot.HarbronFit}
 \title{Plot method for \code{HarbronFit} objects}
 \usage{
-\method{plot}{HarbronFit}(x, y = NULL, which = c("nls", "2d", "3d"),
-  ...)
+\method{plot}{HarbronFit}(x, y = NULL, which = c("nls", "2d", "3d"), ...)
 }
 \arguments{
 \item{x}{A \code{HarbronFit} object returned by \code{\link{fitModel}}.}

@@ -4,9 +4,17 @@
 \alias{getTauSurface}
 \title{Compute interaction index surface and confidence intervals}
 \usage{
-getTauSurface(fit, data = NULL, addCI = TRUE, method = c("default",
-  "boot"), level = 0.95, niter = 100, resample = c("all", "mono",
-  "stratified"), seed = NULL, ...)
+getTauSurface(
+  fit,
+  data = NULL,
+  addCI = TRUE,
+  method = c("default", "boot"),
+  level = 0.95,
+  niter = 100,
+  resample = c("all", "mono", "stratified"),
+  seed = NULL,
+  ...
+)
 }
 \arguments{
 \item{fit}{A \code{HarbronFit} object returned by 

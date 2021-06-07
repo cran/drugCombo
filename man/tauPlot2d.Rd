@@ -4,11 +4,23 @@
 \alias{tauPlot2d}
 \title{Plot estimated interaction index surface slice along one of the doses}
 \usage{
-tauPlot2d(tauSurface, tauSurface2 = NULL, side = "d1",
-  groupBy = NULL, colorBy = groupBy, facetBy = "auto",
-  continuous = FALSE, continuous2 = FALSE, addLine = continuous ||
-  continuous2, funs = NULL, funs2 = NULL, title = NULL,
-  tauNames = NULL, digits = 4, facetOpts = NULL)
+tauPlot2d(
+  tauSurface,
+  tauSurface2 = NULL,
+  side = "d1",
+  groupBy = NULL,
+  colorBy = groupBy,
+  facetBy = "auto",
+  continuous = FALSE,
+  continuous2 = FALSE,
+  addLine = continuous || continuous2,
+  funs = NULL,
+  funs2 = NULL,
+  title = NULL,
+  tauNames = NULL,
+  digits = 4,
+  facetOpts = NULL
+)
 }
 \arguments{
 \item{tauSurface}{A \code{tauSurface} object returned by 

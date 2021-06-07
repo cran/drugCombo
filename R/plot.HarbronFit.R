@@ -175,7 +175,7 @@ fitPlot2d <- function(fit, fit2 = NULL, side = c("d1", "d2", "total"),
   p <- ggplot(data = plotData, 
           aes_string(x = paste0("log10T(", side, ")"), y = "effect")) + 
       geom_point(color = "lightgray") +
-      stat_summary(fun.y = "mean", color = "black", geom = "point") +
+      stat_summary(fun = "mean", color = "black", geom = "point") +
       geom_line(data = predictedData, aes(x = log10T(get(side)), y = predict, 
               color = "one"), show.legend = isTRUE(compare))
   

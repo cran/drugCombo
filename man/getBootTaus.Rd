@@ -4,8 +4,14 @@
 \alias{getBootTaus}
 \title{Run nonparametric bootstrap on the interaction index model}
 \usage{
-getBootTaus(fit, niter = 100, resample = c("all", "mono",
-  "stratified"), seed = NULL, verbose = FALSE, ...)
+getBootTaus(
+  fit,
+  niter = 100,
+  resample = c("all", "mono", "stratified"),
+  seed = NULL,
+  verbose = FALSE,
+  ...
+)
 }
 \arguments{
 \item{fit}{A \code{HarbronFit} object returned by 

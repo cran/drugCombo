@@ -66,7 +66,7 @@ test_that("tau surface calculation gives the same result with/without tauLog for
       tauCont <- getTauSurface(fitContinuous)
       expect_warning(tauContLog <- getTauSurface(fitContinuousLog), "may not be appropriate")
       
-      expect_equal(tauCont, tauContLog, tolerance = 1e-4)
+      expect_equal(tauCont, tauContLog, tolerance = 1e-4, check.environment = FALSE)
     })
 
 test_that("tau surface calculation doesn't give the same result with/without tauLog for discrete model", {

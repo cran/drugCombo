@@ -4,14 +4,16 @@
 \name{checkerboardData}
 \alias{checkerboardData}
 \title{Example checkerboard design drug combination data}
-\format{A data frame with 9360 observations of 5 variables:
+\format{
+A data frame with 9360 observations of 5 variables:
 \itemize{
  \item d1: dose of the first compound
  \item d2: dose of the second compound
  \item effect: observed effect (normalized cell counts)
  \item plate: plate ID (1 to 3 within experiment)
  \item exp: experiment ID (1 to 10)
-}}
+}
+}
 \description{
 A dataset containing data from 10 different in-vitro drug combination 
 experiments for an antiviral treatment (compound 1) using a checkerboard 

@@ -4,8 +4,13 @@
 \alias{fitPlot2d}
 \title{Plot 2d surface (slices) of observations and model fit}
 \usage{
-fitPlot2d(fit, fit2 = NULL, side = c("d1", "d2", "total"),
-  useFineGrid = TRUE, modelNames = NULL)
+fitPlot2d(
+  fit,
+  fit2 = NULL,
+  side = c("d1", "d2", "total"),
+  useFineGrid = TRUE,
+  modelNames = NULL
+)
 }
 \arguments{
 \item{fit}{A \code{HarbronFit} object returned by \code{\link{fitModel}}.}
