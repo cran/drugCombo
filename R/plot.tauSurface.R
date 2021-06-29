@@ -631,9 +631,10 @@ contour.tauSurface <- function(x, digits = 4, ...) {
       scale_x_discrete(labels = format(as.numeric(levels(plotData$d1)), digits = digits)) + 
       scale_y_discrete(labels = format(as.numeric(levels(plotData$d2)), digits = digits)) +
       scale_fill_manual(breaks = seq_len(nCols), values = allColors, 
-          guide = FALSE) + 
+          guide = "none") + 
       scale_color_manual( # for a nicer legend
           values = setNames(1:3, nm = synCalls),
+          limits = force,
           guide = guide_legend(title = "call:", 
               override.aes = list(alpha = 1, shape = 22, size = 8, color = "grey", 
                   fill = legendColors))
